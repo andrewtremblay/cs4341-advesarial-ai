@@ -45,7 +45,7 @@
 				fireRate = _fireRate;
 			} else {
 				ammo = Math.floor(Math.random()*(1+100-20)) + 20;
-				spread = Math.random();
+				spread = Math.floor(Math.random()*64);
 				damage = Math.floor(Math.random()*10) + 1;
 				fireRate = Math.floor(Math.random()*10) + 1
 			}
@@ -70,17 +70,21 @@
 			
 			timer = timeInterval;
 			
-			//Current position of the player and zombie
+			//Current position of the player and target
+			var spreadVariance:int = Math.floor(Math.random() * 2 * spread) - spread;
 			var playerPos:Point = new Point(player.x, player.y);
-			var targetPos:Point = new Point(target.x, target.y);
+			var targetPos:Point = new Point(target.x + spreadVariance, target.y);
 			
 			var bullet:Bullet = new Bullet(this.damage);
-			bullet.x = player.x;
-			bullet.y = player.y;
+			bullet.x = player.x + 24;
+			bullet.y = player.y + 64;
 			
 			var directionVector:Point = targetPos.subtract(playerPos);
 			directionVector.normalize(GameState.BULLET_SPEED);
-			bullet.velocity = new FlxPoint(directionVector.x, directionVector.y);
+			bullet.velocity = new FlxPoint(directionVector.x, directionVector.y - 32);
+			
+			GameState.bullets.add(bullet);
+			GameState.renderLayer.add(bullet);
 		}
 		
 	}
