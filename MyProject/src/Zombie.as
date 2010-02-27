@@ -25,10 +25,8 @@
 			super(X, Y);
 			loadGraphic(ImgZombie, false, false, 64, 64);
 			
-			maxVelocity.x = 200;
-            maxVelocity.y = 200;
-            //Set the zombie health
-            health = 100;
+			//Set the zombie health
+            health = health;
             //bounding box tweaks
             width = 64;
             height = 64;
@@ -46,9 +44,8 @@
 			//If the zombie runs out of health, he is removed.
             if(dead)
             {
-                if(finished) exists = false;
-                else
-                    super.update();
+                exists = false;
+				trace("ARGH I DIED LOL");
                 return;
             }
 			

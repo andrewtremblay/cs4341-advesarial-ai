@@ -48,7 +48,7 @@
 			//var bullet:Bullet = new Bullet(ownedGun);
             //GameState.lyrSprites.add(bullet);
 			if (target == null){
-				target = GameState.getRandomZombie();
+				target = GameState.zombies.getRandom() as Zombie;
 			}
 			
 			ownedGun.shoot(target,FlxG.elapsed);

@@ -15,14 +15,14 @@
 		public function Bullet(_damage:int) 
 		{
 			damage = _damage;
-			loadGraphic(ImgBullet, true, true, 64, 64);
+			loadGraphic(ImgBullet, true, true, 16, 16);
 		}
 		
 		override public function update():void
         {
 			super.update();
 			
-			if (y < -480 || x > 640) {
+			if (y < GameState.WINDOW_Y || x > GameState.WINDOW_X || x < 0) {
 				exists = false;
 			}
 		}
