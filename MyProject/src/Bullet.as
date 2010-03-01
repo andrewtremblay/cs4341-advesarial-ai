@@ -10,9 +10,9 @@
 		[Embed(source='../lib/Bullet.png')] private var ImgBullet:Class;
 		
 		//The damage that this bullet does.
-		public var damage:int;
+		public var damage:Number;
 		
-		public function Bullet(_damage:int) 
+		public function Bullet(_damage:Number) 
 		{
 			damage = _damage;
 			loadGraphic(ImgBullet, true, true, 16, 16);

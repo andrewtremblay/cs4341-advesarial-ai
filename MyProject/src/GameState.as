@@ -81,7 +81,7 @@
 			
         }
 		
-		public static function makeZombie(_spout:Point,_player:Player, _speed:int, _health:int):void
+		public static function makeZombie(_spout:Point,_player:Player, _speed:int, _health:Number):void
 		{
 			var xVar:int = Math.floor(Math.random() * 100);
 			var yVar:int = Math.floor(Math.random() * 100);
