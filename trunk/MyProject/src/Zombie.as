@@ -1,6 +1,7 @@
 ﻿package  
 {
 	import flash.geom.Point;
+	import mx.events.InterDragManagerEvent;
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
 	/**
@@ -20,17 +21,17 @@
 		/*
 		 * Takes in an x and y for position, and a player to chase after. 
 		 */
-		public function Zombie(X:Number,Y:Number,linkedPlayer:Player,speed:int, health:int) 
+		public function Zombie(X:Number,Y:Number,linkedPlayer:Player,speed:int, _health:int) 
 		{
 			super(X, Y);
 			loadGraphic(ImgZombie, false, false, 64, 64);
 			
 			//Set the zombie health
-            health = health;
+            health = _health;
             //bounding box tweaks
             width = 64;
             height = 64;
-			
+			dead = false
 			_player = linkedPlayer;
 			_moveSpeed = speed;
 		}
@@ -64,6 +65,7 @@
             super.update();
         }
 		
+
 	}
 
 }
