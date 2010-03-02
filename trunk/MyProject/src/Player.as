@@ -14,13 +14,21 @@
 		private var ownedGun:Gun;
 		
 		private var target:Zombie = null;
+		
+		public var timesBeenHurt:Number = 0;
+		
+		public var kills:Number = 0;
+		
+		public var idNum:Number;
         
-        public function Player(X:Number,Y:Number,gun:Gun):void
+        public function Player(X:Number,Y:Number,gun:Gun,id:Number):void
         {
             super(X,Y);
 			loadGraphic(ImgPlayer, false, false, 64, 64);
             maxVelocity.x = 0;
             maxVelocity.y = 0;
+			
+			idNum = id;
 			
             //Set the player health
             health = 100;
@@ -35,6 +43,10 @@
     
         override public function update():void
         {
+			if (kills > 0) {
+				trace("I killed one");
+				kills--;
+			}
 
 			//If the player runs out of health, he is removed.
             if(dead)
@@ -54,6 +66,17 @@
 				ownedGun.shoot(target,FlxG.elapsed);
 			super.update();
         }     
+		
+		override public function hurt(Damage:Number):void {
+			super.hurt(Damage);
+			
+			timesBeenHurt++;
+		}
+		
+		public function incrementKills():void {
+				trace("I killed one");
+			kills++;
+		}
     }
 
 }

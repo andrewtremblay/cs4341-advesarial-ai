@@ -75,7 +75,7 @@
 			var playerPos:Point = new Point(player.x, player.y);
 			var targetPos:Point = new Point(target.x + spreadVariance, target.y);
 			
-			var bullet:Bullet = new Bullet(this.damage);
+			var bullet:Bullet = new Bullet(this.damage, player.idNum);
 			bullet.x = player.x + 24;
 			bullet.y = player.y + 64;
 			
