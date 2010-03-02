@@ -33,7 +33,6 @@
 		public function AIDirector() 
 		{
 			super();
-			FlashConnect.trace("AI IS WATCHING");
 		}
 
 
