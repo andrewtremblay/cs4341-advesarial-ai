@@ -6,6 +6,7 @@
 	 */
 	import flash.geom.Point;
 	import org.flixel.*;
+	import org.flashdevelop.utils.FlashConnect;
 	
 	public class GameState extends FlxState
 	{
@@ -35,13 +36,16 @@
 		//The layer to render everything in
 		public static var renderLayer:FlxGroup;
 		
+		
+		public static var AIDr:AIDirector;
+		
 		override public function GameState(): void
 		{
 			super();
 			
 			//I see a black background I want to paint it blue...
 			bgColor = 0xff0000A0;
-			
+			AIDr = new AIDirector();
 			//Initialize stuff
 			renderLayer = new FlxGroup();
 			
@@ -58,6 +62,9 @@
 			//zombies.push(new Zombie(300, 400, players[0], 100, 100));
 			
 			makeZombie(SPOUT_1, players.getRandom() as Player, 100, 100);
+			makeZombie(SPOUT_2, players.getRandom() as Player, 100, 100);
+
+			
 			
 			for (var i:int = 0; i < players.members.length; i++) {
 				renderLayer.add(players.members[i]);
@@ -75,9 +82,12 @@
 		override public function update():void
         {
             super.update();
-			
 			//Check collisions between bullets and zombies.
 			this.gotShot();
+			//Update PlayerModeler
+			
+			//Update AIDirector
+			AIDr.update();
 			
         }
 		
@@ -96,7 +106,7 @@
 			trace(colBullet.damage);
 			colZombie.hurt(colBullet.damage);
             colBullet.kill();
-			trace("Zombie was hurt");
+			FlashConnect.trace("Zombie was hurt");
         }
 		
 		private function gotShot():void
@@ -106,7 +116,7 @@
 					if(FlxU.collide(b,z))
 					{	
 						zombieShot(b, z);
-						trace("Zombie was shot");
+						FlashConnect.trace("Zombie was shot");
 					} else {
 					}
 				}

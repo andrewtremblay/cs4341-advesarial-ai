@@ -1,6 +1,7 @@
 ﻿package  
 {
 	import org.flixel.*;
+	import org.flashdevelop.utils.FlashConnect;
 	/**
 	 * ...
 	 * @author Kevin Nolan
@@ -44,7 +45,7 @@
         override public function update():void
         {
 			if (kills > 0) {
-				trace("I killed one");
+				FlashConnect.trace("I killed one");
 				kills--;
 			}
 
@@ -74,7 +75,7 @@
 		}
 		
 		public function incrementKills():void {
-				trace("I killed one");
+				FlashConnect.trace("I killed one");
 			kills++;
 		}
     }

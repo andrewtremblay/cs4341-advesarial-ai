@@ -1,5 +1,7 @@
 ﻿package  
 {
+	
+	import org.flixel.*;
 	/**
 	 * ...
 	 * @author Kevin Nolan
@@ -13,24 +15,18 @@
 	 * -outputs readings to console 
 	*/
 	public interface PlayerModeler
-	{
-		public function getBoredom():int;
-		
-		public function getExcitement():int;
-		
-		public function getStress():int;
-		
+	{	
 		public function getHealth():int;
 		
 		public function getAmmo():int;
-		
-		//public function getPerceptibility():int;
 		
 		public function getKills():int;
 		
 		public function getTimesHurt():int;
 		
 		public function getZombiesCanSee():int;
+		
+		//public function getPerceptibility():int;	
 	}
 
 }
