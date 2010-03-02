@@ -27,6 +27,9 @@
 		//An array to hold the players in
 		public static var players:FlxGroup;
 		
+		//An array to hold the testmodelers of the players
+		public static var playerModels:FlxGroup;
+		
 		//An array to hold the zombies in
 		public static var zombies:FlxGroup;
 		
@@ -49,7 +52,9 @@
 			//Initialize stuff
 			renderLayer = new FlxGroup();
 			
+			//initalizing groups
 			players = new FlxGroup();
+			playerModels = new FlxGroup();
 			zombies = new FlxGroup();
 			bullets = new FlxGroup();
 			
@@ -58,6 +63,12 @@
 			players.add(new Player(300, 20, new Gun(15,48,5,5,false), 2));
 			players.add(new Player(400, 20, new Gun(5,0,20,1,false), 3));
 			players.add(new Player(100, 20, new Gun(30,64,3,10,false), 4));
+			
+			//Add the test modelers (cooresponds to players created)
+			playerModels.add(new TestModeler(new Player(200, 20, new Gun(10,48,10,2,false), 1)));
+			playerModels.add(new TestModeler(new Player(300, 20, new Gun(15,48,5,5,false), 2)));
+			playerModels.add(new TestModeler(new Player(400, 20, new Gun(5,0,20,1,false), 3)));
+			playerModels.add(new TestModeler(new Player(100, 20, new Gun(30,64,3,10,false), 4)));
 			
 			//zombies.push(new Zombie(300, 400, players[0], 100, 100));
 			
@@ -103,10 +114,8 @@
 		
 		private function zombieShot(colBullet:Bullet, colZombie:Zombie):void
         {
-			trace(colBullet.damage);
 			colZombie.hurt(colBullet.damage);
             colBullet.kill();
-			FlashConnect.trace("Zombie was hurt");
         }
 		
 		private function gotShot():void
@@ -116,7 +125,6 @@
 					if(FlxU.collide(b,z))
 					{	
 						zombieShot(b, z);
-						FlashConnect.trace("Zombie was shot");
 					} else {
 					}
 				}

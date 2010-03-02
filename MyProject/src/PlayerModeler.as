@@ -15,18 +15,15 @@
 	 * -outputs readings to console 
 	*/
 	public interface PlayerModeler
-	{	
-		public function getHealth():int;
-		
-		public function getAmmo():int;
-		
-		public function getKills():int;
-		
-		public function getTimesHurt():int;
-		
-		public function getZombiesCanSee():int;
-		
-		//public function getPerceptibility():int;	
+	{
+		function getBoredom():Number;
+		function getExcitement():Number;
+		function getStress():Number;
+		function getHealth():Number;
+		function getAmmo():Number;
+		function getKills():Number;
+		function getTimesHurt():Number;
+		function getVisibleZombies():Number;
 	}
 
 }

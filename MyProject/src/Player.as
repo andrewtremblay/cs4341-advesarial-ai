@@ -45,7 +45,6 @@
         override public function update():void
         {
 			if (kills > 0) {
-				FlashConnect.trace("I killed one");
 				kills--;
 			}
 
@@ -66,7 +65,12 @@
 			else if (target != null)
 				ownedGun.shoot(target,FlxG.elapsed);
 			super.update();
-        }     
+        }
+		
+		public function getGun():Gun
+		{
+			return this.ownedGun;
+		}
 		
 		override public function hurt(Damage:Number):void {
 			super.hurt(Damage);
@@ -75,7 +79,6 @@
 		}
 		
 		public function incrementKills():void {
-				FlashConnect.trace("I killed one");
 			kills++;
 		}
     }
