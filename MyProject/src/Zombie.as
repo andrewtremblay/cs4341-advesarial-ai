@@ -46,7 +46,7 @@
             if(dead)
             {
                 exists = false;
-				trace("ARGH I DIED LOL");
+				GameState.zombies.remove(this);
                 return;
             }
 			

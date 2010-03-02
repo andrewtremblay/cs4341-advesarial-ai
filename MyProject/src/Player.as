@@ -45,15 +45,14 @@
 			
 			//Shoot the gun here
 			//Gun also needs a target
-			//var bullet:Bullet = new Bullet(ownedGun);
-            //GameState.lyrSprites.add(bullet);
-			if (target == null){
-				target = GameState.zombies.getRandom() as Zombie;
+			if (target == null || !target.exists) {
+				if (GameState.zombies.countLiving() == 0)
+					target = null;
+				else target = GameState.zombies.getRandom() as Zombie;
 			}
-			
-			ownedGun.shoot(target,FlxG.elapsed);
-			
-            super.update();
+			else if (target != null)
+				ownedGun.shoot(target,FlxG.elapsed);
+			super.update();
         }     
     }
 
