@@ -50,10 +50,10 @@
 			bullets = new FlxGroup();
 			
 			//Add the players
-			players.add(new Player(200, 20, new Gun(10,48,10,2,false)));
-			players.add(new Player(300, 20, new Gun(15,48,5,5,false)));
-			players.add(new Player(400, 20, new Gun(5,0,20,1,false)));
-			players.add(new Player(100, 20, new Gun(30,64,3,10,false)));
+			players.add(new Player(200, 20, new Gun(10,48,10,2,false), 1));
+			players.add(new Player(300, 20, new Gun(15,48,5,5,false), 2));
+			players.add(new Player(400, 20, new Gun(5,0,20,1,false), 3));
+			players.add(new Player(100, 20, new Gun(30,64,3,10,false), 4));
 			
 			//zombies.push(new Zombie(300, 400, players[0], 100, 100));
 			
@@ -111,6 +111,20 @@
 					}
 				}
 			}
+		}
+		
+		/*
+		 * Returns the player with the specified ID number.
+		 * If no players exist with that number, returns null.
+		 */
+		public static function getPlayerByID(id:Number):Player {
+			for each (var p:Player in players.members) {
+				if (p.idNum == id) {
+					return p;
+				}
+			}
+			
+			return null;
 		}
 		
 	}

@@ -12,9 +12,13 @@
 		//The damage that this bullet does.
 		public var damage:Number;
 		
-		public function Bullet(_damage:Number) 
+		//The player that owns this bullet
+		private var player:Number;
+		
+		public function Bullet(_damage:Number, _player:Number) 
 		{
 			damage = _damage;
+			player = _player;
 			loadGraphic(ImgBullet, true, true, 16, 16);
 		}
 		
@@ -25,6 +29,11 @@
 			if (y < GameState.WINDOW_Y || x > GameState.WINDOW_X || x < 0) {
 				exists = false;
 			}
+		}
+		
+		override public function kill():void {
+			GameState.getPlayerByID(player).incrementKills();
+			super.kill();
 		}
 	}
 
