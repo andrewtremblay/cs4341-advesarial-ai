@@ -5,6 +5,7 @@
 	/**
 	 * ...
 	 * @author Kevin Nolan
+	 * @author Francis Collins
 	 */
 	public class Player extends FlxSprite
     {
@@ -15,6 +16,8 @@
 		private var ownedGun:Gun;
 		
 		private var target:Zombie = null;
+		
+		private var teamwork:Boolean = true;
 		
 		public var timesBeenHurt:Number = 0;
 		
@@ -59,7 +62,21 @@
 			//Gun also needs a target
 			if (target == null || !target.exists) {
 				if (GameState.zombies.countLiving() == 0)
+				{
 					target = null;
+				}
+				//if teamwork is on, all the players are going to target the zombie with
+				//the largest amount of health and shoot him
+				else if (teamwork)
+				{
+					for each(var z:Zombie in GameState.zombies.members)
+					{
+						if (target == null && z.exists)
+							target = z;
+						else if (z.health > target.health && z.exists)
+							target = z;
+					}
+				}
 				else target = GameState.zombies.getRandom() as Zombie;
 			}
 			else if (target != null)
