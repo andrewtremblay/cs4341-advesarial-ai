@@ -72,9 +72,9 @@
 				{
 					for each(var z:Zombie in GameState.zombies.members)
 					{
-						if (target == null && z.exists)
+						if ((target == null || target.dead) && z.exists)
 							target = z;
-						else if (z.health > target.health && z.exists)
+						else if (((z.health + z.velocity.x + z.velocity.y) > (target.health + target.velocity.x + target.velocity.y)) && z.exists)
 							target = z;
 					}
 				}
