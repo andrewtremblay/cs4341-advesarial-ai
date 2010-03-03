@@ -24,6 +24,10 @@
 		
 		override public function update():void
         {
+			//If all players are dead, stop the game
+			if (GameState.players.countLiving() == 0) {
+				return;
+			}
 			super.update();
 			
 			if (y < GameState.WINDOW_Y || x > GameState.WINDOW_X || x < 0) {
