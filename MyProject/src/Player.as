@@ -47,8 +47,9 @@
     
         override public function update():void
         {
-			if (kills > 0) {
-				kills--;
+			//If all players are dead, stop the game
+			if (GameState.players.countLiving() == 0) {
+				return;
 			}
 
 			//If the player runs out of health, he is removed.

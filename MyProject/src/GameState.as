@@ -23,6 +23,8 @@
 		//Bullet uses this to get rid of bullets when they leave the screen.
 		public static const WINDOW_X:int = 640;
 		public static const WINDOW_Y:int = -480;
+		//The amount of damage a zombie does when it hits a player
+		public static const ZOMBIE_DAMAGE:Number = 100;
 		
 		//An array to hold the players in
 		public static var players:FlxGroup;
@@ -41,14 +43,20 @@
 		
 		
 		public static var AIDr:AIDirector;
+		public var spawner:TestDirector;
 		
 		override public function GameState(): void
 		{
 			super();
 			
+			trace("YO");
+			
 			//I see a black background I want to paint it blue...
 			bgColor = 0xff0000A0;
-			AIDr = new AIDirector();
+			//Commented out so we can test player stuff
+			//AIDr = new AIDirector();
+			//Get rid of the testdirector in the real game
+			spawner = new TestDirector();
 			//Initialize stuff
 			renderLayer = new FlxGroup();
 			
@@ -82,26 +90,30 @@
 				renderLayer.add(zombies[j]);
 			}
 			*/
-			
+			renderLayer.add(spawner);
 			this.add(renderLayer);
 		}
 		
 		override public function update():void
         {
+			//If all players are dead, stop the game
+			if (GameState.players.countLiving() == 0) {
+				return;
+			}
             super.update();
 			//Check collisions between bullets and zombies.
 			this.gotShot();
 			//Update PlayerModeler
-			
+			this.gotBit();
 			//Update AIDirector
-			AIDr.update();
+			//AIDr.update();
 			
         }
 		
 		public static function makeZombie(_spout:Point,_player:Player, _speed:int, _health:Number):void
 		{
-			var xVar:int = Math.floor(Math.random() * 100);
-			var yVar:int = Math.floor(Math.random() * 100);
+			var xVar:int = Math.floor(Math.random() * 200) - 100;
+			var yVar:int = Math.floor(Math.random() * 200) - 100;
 			
 			var newZombie:Zombie = new Zombie(_spout.x + xVar, _spout.y + yVar, _player, _speed, _health);
 			zombies.add(newZombie);
@@ -114,6 +126,12 @@
             colBullet.kill();
         }
 		
+		private function playerBit(colPlayer:Player, colZombie:Zombie):void 
+		{
+			colPlayer.hurt(ZOMBIE_DAMAGE);
+            colZombie.kill();
+		}
+		
 		private function gotShot():void
 		{
 			for each(var b:Bullet in bullets.members) {
@@ -121,6 +139,19 @@
 					if(FlxU.collide(b,z))
 					{	
 						zombieShot(b, z);
+					} else {
+					}
+				}
+			}
+		}
+		
+		private function gotBit():void
+		{
+			for each(var p:Player in players.members) {
+				for each(var z:Zombie in zombies.members) {
+					if(FlxU.collide(p,z))
+					{	
+						playerBit(p, z);
 					} else {
 					}
 				}

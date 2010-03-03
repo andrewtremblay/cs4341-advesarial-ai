@@ -38,6 +38,10 @@
     
         override public function update():void
         {
+			//If all players are dead, stop the game
+			if (GameState.players.countLiving() == 0) {
+				return;
+			}
 			//Current position of the player and zombie
 			var playerPos:Point = new Point(_player.x, _player.y);
 			var zombiePos:Point = new Point(this.x, this.y);
@@ -50,20 +54,26 @@
                 return;
             }
 			
-			if(Point.distance(playerPos, zombiePos) > 50)
-            {
-				var directionVector:Point = playerPos.subtract(zombiePos);
-				
-				directionVector.normalize(_moveSpeed);
-				
-				velocity = new FlxPoint(directionVector.x, directionVector.y);
-            } else {
-				velocity.x = 0;
-				velocity.y = 0;
+			//If the targeted player is dead, pick a different one
+			if (_player.dead) {
+				while(targetAlive()){}
 			}
+			
+			
+			var directionVector:Point = playerPos.subtract(zombiePos);
+			directionVector.normalize(_moveSpeed);
+			velocity = new FlxPoint(directionVector.x, directionVector.y);
 			
             super.update();
         }
+		private function targetAlive():Boolean {
+			if (_player.dead) {
+				_player = GameState.players.getRandom() as Player;
+			}
+			
+			return _player.dead;
+		}
+		
 
 	}
 
