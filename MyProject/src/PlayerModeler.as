@@ -5,6 +5,7 @@
 	/**
 	 * ...
 	 * @author Kevin Nolan
+	 * @author Francis Collins
 	 */
 	/*
 	 * 

@@ -11,7 +11,7 @@
 		protected var boredom:Number;			//current boredom amount
 		protected var excitement:Number;		//current excitement amount
 		protected var stress:Number;			//current stress amount
-		protected var healthness:Number;			//current health
+		protected var healthness:Number;		//current health
 		protected var ammo:Number;				//current ammo
 		protected var kills:Number;				//number of kills
 		protected var timesHurt:Number;			//number of times player's been hurt
@@ -24,7 +24,7 @@
 			this.player = _player;
 			this.healthness = player.health;
 			this.ammo = player.getGun().ammo;
-			this.kills = GameState.zombies.countDead();
+			this.kills = player.kills;
 			this.timesHurt = (100 - player.health) / player.getGun().damage;
 			this.visibleZombies = GameState.zombies.countLiving();
 		}
