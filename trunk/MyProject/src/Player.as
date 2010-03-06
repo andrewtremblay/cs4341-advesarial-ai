@@ -61,13 +61,43 @@
 			
 			//Shoot the gun here
 			//Gun also needs a target
-			if (GameState.zombies.countLiving() == 0 && target.dead)
+			//All targeting is moved to a helper method.
+			getTarget();
+			
+			//If there is no target, don't shoot.
+			trace(target);
+			if (target != null) 
 			{
-				target = null;
+				ownedGun.shoot(target, FlxG.elapsed);
 			}
+			
+			super.update();
+        }
+		
+		/*
+		 * Gets a new target for this player, based on various herustics and calculations.
+		 * Doesn't return anything, just puts the target into the target variable.
+		 */
+		public function getTarget():void
+		{
+			if (target == null && GameState.zombies.countLiving() > 0) 
+			{
+				target = GameState.zombies.getFirstAlive() as Zombie;
+			}
+			
+			//If there are no zombies left, set the target to null.
+			if (target != null)
+			{
+				if (target.dead)
+				{
+					trace("null target");
+					target = null;
+				}
+			}
+			
 			//if teamwork is on, all the players are going to target the zombie with
 			//the largest amount of health and shoot him
-			else if (teamwork)
+			if (teamwork && target != null)
 			{
 				for each(var z:Zombie in GameState.zombies.members)
 				{
@@ -79,13 +109,12 @@
 					}
 				}
 			}
-			else 
+			//If teamwork is off, the players will target a random zombie.
+			else if (target != null)
 			{
 				target = GameState.zombies.getRandom() as Zombie;
 			}
-			ownedGun.shoot(target, FlxG.elapsed);
-			super.update();
-        }
+		}
 		
 		public function getGun():Gun
 		{
