@@ -17,6 +17,7 @@
 	*/
 	public interface PlayerModeler
 	{
+		function getID():Number;
 		function getBoredom():Number;
 		function getExcitement():Number;
 		function getStress():Number;

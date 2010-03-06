@@ -11,7 +11,7 @@
     {
         [Embed(source='../lib/Player.png')] private var ImgPlayer:Class;
         
-        private var _max_health:int = 100;
+        private var _max_health:int = 200;
 		
 		private var ownedGun:Gun;
 		
@@ -35,7 +35,7 @@
 			idNum = id;
 			
             //Set the player health
-            health = 100;
+            health = 200;
 			
             //bounding box tweaks
             width = 64;

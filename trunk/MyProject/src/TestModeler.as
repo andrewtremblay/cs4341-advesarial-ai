@@ -29,6 +29,11 @@
 			this.visibleZombies = GameState.zombies.countLiving();
 		}
 		
+		public function getID():Number 
+		{
+			return this.player.idNum;
+		}
+		
 		//boredom, excitement, and stress all based off values ranging between 0 and 100
 		//ex: timesHurt 0 <-> 100
 		//cannot calculate values with infinity as a possible value, so used 100 as max

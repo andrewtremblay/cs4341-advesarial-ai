@@ -4,6 +4,7 @@
 	import mx.events.InterDragManagerEvent;
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
+	import org.flashdevelop.utils.FlashConnect;
 	/**
 	 * ...
 	 * @author Kevin Nolan
@@ -49,6 +50,7 @@
 			//If the zombie runs out of health, he is removed.
             if(dead)
             {
+				FlashConnect.trace("zombie removed");
                 exists = false;
 				GameState.zombies.remove(this);
                 return;
