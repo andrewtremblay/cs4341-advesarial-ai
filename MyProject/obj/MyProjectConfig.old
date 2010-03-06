@@ -5,13 +5,13 @@
   <target-player>10.0.0</target-player>
   <compiler>
     <source-path append="true">
-      <path-element>C:\Users\andrewtremblay\Desktop\cs4341-advesarial-ai\MyProject\src</path-element>
-      <path-element>C:\Users\andrewtremblay\Desktop\cs4341-advesarial-ai\MyProject\Flixel</path-element>
-      <path-element>C:\Users\andrewtremblay\Documents\FlashDevelop\Library\AS3\classes</path-element>
+      <path-element>C:\Kevin's Stuff\WPI\AI Final\MyProject\src</path-element>
+      <path-element>C:\Kevin's Stuff\WPI\AI Final\MyProject\Flixel</path-element>
+      <path-element>C:\Program Files (x86)\FlashDevelop\Library\AS3\classes</path-element>
     </source-path>
   </compiler>
   <file-specs>
-    <path-element>C:\Users\andrewtremblay\Desktop\cs4341-advesarial-ai\MyProject\src\Game.as</path-element>
+    <path-element>C:\Kevin's Stuff\WPI\AI Final\MyProject\src\Game.as</path-element>
   </file-specs>
   <default-background-color>#FFFFFF</default-background-color>
   <default-frame-rate>30</default-frame-rate>

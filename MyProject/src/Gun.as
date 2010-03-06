@@ -36,7 +36,7 @@
 		 * Makes a gun with the given parameters.
 		 * If random is true, it makes a random gun.
 		 */
-		public function Gun(_ammo:int,_spread:Number,_damage:int,_fireRate:int,random:Boolean) 
+		public function Gun(_ammo:int,_spread:Number,_damage:int,_fireRate:int,random:Boolean=false) 
 		{
 			if(!random){
 				ammo = _ammo;
