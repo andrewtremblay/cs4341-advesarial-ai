@@ -43,7 +43,6 @@
 		
 		
 		public static var AIDr:AIDirector;
-		public var spawner:TestDirector;
 		
 		override public function GameState(): void
 		{
@@ -51,10 +50,6 @@
 			
 			//I see a black background I want to paint it blue...
 			bgColor = 0xff0000A0;
-			//Commented out so we can test player stuff
-			//AIDr = new AIDirector();
-			//Get rid of the testdirector in the real game
-			spawner = new TestDirector();
 			//Initialize stuff
 			renderLayer = new FlxGroup();
 			
@@ -65,16 +60,14 @@
 			bullets = new FlxGroup();
 			
 			//Add the players
-			players.add(new Player(200, 20, new Gun(10,48,10,2,false), 1));
-			players.add(new Player(300, 20, new Gun(15,48,5,5,false), 2));
-			players.add(new Player(400, 20, new Gun(5,0,20,1,false), 3));
-			players.add(new Player(100, 20, new Gun(30,64,3,10,false), 4));
+			players.add(new Player(200,  20,  new Gun(10,48,10,2,false), 1));
+			players.add(new Player(300,  20,  new Gun(15,48,5,5,false),  2));
+			players.add(new Player(400,  20,  new Gun(5,0,20,1,false),   3));
+			players.add(new Player(100,  20,  new Gun(30,64,3,10,false), 4));
 			
-			//zombies.push(new Zombie(300, 400, players[0], 100, 100));
-			
-			makeZombie(SPOUT_1, players.getRandom() as Player, 100, 100);
-			makeZombie(SPOUT_4, players.getRandom() as Player, 100, 100);
-
+			// Keep the AIDirector declaration after the players are initiolaized from now on 
+			//so the AI director has some control over the initial zombie count (relative to number of initial players)
+			AIDr = new AIDirector();
 			
 			
 			for (var i:int = 0; i < players.members.length; i++) {
@@ -88,7 +81,7 @@
 				renderLayer.add(zombies[j]);
 			}
 			*/
-			renderLayer.add(spawner);
+			renderLayer.add(AIDr);
 			this.add(renderLayer);
 		}
 		
@@ -103,9 +96,7 @@
 			this.gotShot();
 			//Update PlayerModeler
 			this.gotBit();
-			//Update AIDirector
-			//AIDr.update();
-			
+			//Update AIDirector			
         }
 		
 		public static function makeZombie(_spout:Point,_player:Player, _speed:int, _health:Number):void
@@ -133,13 +124,13 @@
 		private function gotShot():void
 		{
 			for each(var b:Bullet in bullets.members) {
-				for each(var z:Zombie in zombies.members) {
-					if(FlxU.collide(b,z))
-					{	
-						zombieShot(b, z);
-					} else {
+					for each(var z:Zombie in zombies.members) {
+						if(FlxU.collide(b,z))
+						{	
+							zombieShot(b, z);
+						} else {
+						}
 					}
-				}
 			}
 		}
 		

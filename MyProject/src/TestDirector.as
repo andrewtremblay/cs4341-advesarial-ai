@@ -5,6 +5,7 @@
 	import flash.utils.Timer;
 	import org.flixel.FlxObject;
 	import org.flixel.FlxG;
+	import org.flashdevelop.utils.FlashConnect;
 	/**
 	 * This class allows Fran and I to test the player side stuff before the real AI Director is done.
 	 * @author knolan
