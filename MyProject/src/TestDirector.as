@@ -15,12 +15,10 @@
 		
 		override public function TestDirector() : void
 		{
-			trace("makeSpawner");
 			super();
 		}
 		
 		public function spawnZombie():void {
-			trace("spawn");
 			var spoutNum:Number = Math.ceil(Math.random() * 4);
 			var spout:Point = GameState.SPOUT_1;
 			
@@ -48,7 +46,6 @@
 			timer -= FlxG.elapsed;
 			
 			if (timer <= 0) {
-				trace("spawning");
 				spawnZombie();
 				timer = 1;
 			}

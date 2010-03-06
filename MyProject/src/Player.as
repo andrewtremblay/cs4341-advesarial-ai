@@ -61,27 +61,29 @@
 			
 			//Shoot the gun here
 			//Gun also needs a target
-			if (target == null || !target.exists) {
-				if (GameState.zombies.countLiving() == 0)
+			if (GameState.zombies.countLiving() == 0 && target.dead)
+			{
+				target = null;
+			}
+			//if teamwork is on, all the players are going to target the zombie with
+			//the largest amount of health and shoot him
+			else if (teamwork)
+			{
+				for each(var z:Zombie in GameState.zombies.members)
 				{
-					target = null;
-				}
-				//if teamwork is on, all the players are going to target the zombie with
-				//the largest amount of health and shoot him
-				else if (teamwork)
-				{
-					for each(var z:Zombie in GameState.zombies.members)
+					if ((target == null || target.dead) && z.exists)
+						target = z;
+					else if (((z.health + z.velocity.y - z.getScreenXY().y) > (target.health + target.velocity.y - target.getScreenXY().y)) && z.exists)
 					{
-						if ((target == null || target.dead) && z.exists)
-							target = z;
-						else if (((z.health + z.velocity.x + z.velocity.y) > (target.health + target.velocity.x + target.velocity.y)) && z.exists)
-							target = z;
+						target = z;
 					}
 				}
-				else target = GameState.zombies.getRandom() as Zombie;
 			}
-			else if (target != null)
-				ownedGun.shoot(target,FlxG.elapsed);
+			else 
+			{
+				target = GameState.zombies.getRandom() as Zombie;
+			}
+			ownedGun.shoot(target, FlxG.elapsed);
 			super.update();
         }
 		
