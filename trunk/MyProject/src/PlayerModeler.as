@@ -26,6 +26,18 @@
 		function getKills():Number;
 		function getTimesHurt():Number;
 		function getVisibleZombies():Number;
+		/*
+		 * Does the player modeler handle deltas as well? 
+		 * 
+		 * function getDeltaBoredom():Number;
+		 * function getDeltaExcitement():Number;
+		 * function getDeltaStress():Number;
+		 * function getDeltaHealth():Number;
+		 * function getDeltaAmmo():Number;
+		 * function getDeltaKills():Number;
+		 * function getDeltaVisibleZombies():Number;
+		 * 
+		 */
 	}
 
 }
