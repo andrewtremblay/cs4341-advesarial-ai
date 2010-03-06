@@ -49,8 +49,6 @@
 		{
 			super();
 			
-			trace("YO");
-			
 			//I see a black background I want to paint it blue...
 			bgColor = 0xff0000A0;
 			//Commented out so we can test player stuff
