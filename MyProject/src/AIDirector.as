@@ -17,20 +17,21 @@
 			private var playersLeft:Number = 4; 
 			
 			//temporary variables 
-			private var curBored = 0;
-			private var curExcite = 0;
-			private var curStress = 0;
+			private var curBored:Number = 0;
+			private var curExcite:Number = 0;
+			private var curStress:Number = 0;
 
 			//enum hack for easier array referencing
 			private const boredom:Number = 0; 
 			private const excite:Number = 1; 
 			private const stress:Number = 2;
 			//...
-			private var timeSlice:Array = new Array(0, 0, 0); //stores (boredom, excite, stress))
-			private var allTime:Array = new Array(timeSlice, timeSlice, timeSlice, timeSlice); //stores player data for every player
+			private var playerData:Array = new Array(0, 0, 0); //stores (boredom, excite, stress))
+			private var timeSlice:Array = new Array(playerData, playerData, playerData, playerData); //stores each player data of a moment in an array of its own
+			private var allTime:Array = new Array(timeSlice); //stores player data for every player (be careful with this)
 			 
-			private var arrayData:Array = new Array(0, 0, 0, 0);//stores (spout, victim, speed, health)) 
-			private var zombieData:Array = new Array(arrayData);
+			private var arrayData:Array = new Array(0, 0, 0, 0);//stores (spout, victim, speed, health)) of the spawned zombie
+			private var zombieData:Array = new Array(arrayData); // stores the zombie data of the previous zombies 
 			
 			/*
 			 Expose this stuff to AIDirector: (scalars)
@@ -57,8 +58,8 @@
 		{
 			playersLeft = GameState.players.countLiving();
 			//initialize the arrays
-			for (var p:TestModeler in GameState.playerModels.members) {
-					p.getID();
+			for each(var t:TestModeler in GameState.playerModels.members) {
+					t.getID();
 				} 
 			
 			//GameState.makeZombie(GameState.SPOUT_1, GameState.players.getRandom() as Player, 100, 100);
@@ -69,10 +70,10 @@
 		public function getNewVars():void {
 				playersLeft = GameState.players.countLiving();
 				//For every player, get new player variables from it's playerModel
-				for (var p:TestModeler in GameState.playerModels.members) {
-						curBored = p.getBoredom();
-						curExcite = p.getExcitement();
-						curStress = p.getStress();
+				for each(var t:TestModeler in GameState.playerModels.members) {
+						curBored = t.getBoredom();
+						curExcite = t.getExcitement();
+						curStress = t.getStress();
 					}
 			}		
 			
@@ -80,7 +81,7 @@
 				timer -= FlxG.elapsed;
 				if (timer <= 0) {
 					spawnRandomZombie();
-					timer = 1;
+					timer = 3;
 				}
 			}
 		
@@ -108,10 +109,16 @@
 				spout = GameState.SPOUT_4;
 			}
 			
-			var zHealth:Number = Math.floor(Math.random() * 200);
-			var zSpeed:int = 200 - zHealth; // Math.floor(Math.random() * 200);
+			var zombieConst:Number = 200; //editable while still keeping the zombie balanced
 			
-			GameState.makeZombie(spout, GameState.players.getRandom() as Player, zSpeed, zHealth);
+			var zHealth:Number = Math.floor(Math.random() * zombieConst);
+			var zSpeed:int = zombieConst- zHealth; // we don't want super fast tank zombies, at least not initially
+			
+			var whoNum:Number = Math.floor(Math.random() * 4);
+			var victim:Player = GameState.getPlayerByID(whoNum);//Determine who the zombie will initially attack
+			storeChoice(spoutNum, whoNum, zHealth, zSpeed); //keep track of the selection for later analysis
+			
+			GameState.makeZombie(spout, victim, zSpeed, zHealth);
 		}
 		
 		public function spawnZombie(where:Number, whoNum:Number):void {
@@ -160,15 +167,21 @@
 			
 		}
 		
+		public function storeTimeSlice(where:Number, whoNum:Number, zHealth:Number, zSpeed:Number):void {
+			
+		}
+		
 		override public function update():void {
 			getNewVars();
 			//new heuristic goes here
 			constantRandomHeuristic();
+			//placeHolderHeuristic();
 			
 				//If all players are dead, stop the game
 				if (GameState.players.countLiving() == 0) {
 					return;
 				}
+			
 			super.update();
 			}
 		
