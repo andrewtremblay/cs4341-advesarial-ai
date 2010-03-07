@@ -1,12 +1,15 @@
 ﻿package  
 {
 	import org.flixel.*;
+	import org.flashdevelop.utils.FlashConnect;
 	/**
 	 * ...
 	 * @author Francis Collins
 	 */
 	public class TestModeler  extends FlxSprite implements PlayerModeler
 	{
+		protected var maxHealth:Number;			//maximum health
+		protected var maxAmmo:int;				//maximum ammo
 		protected var player:Player;			//player the test modeler cooresponds to
 		protected var boredom:Number;			//current boredom amount
 		protected var excitement:Number;		//current excitement amount
@@ -22,6 +25,8 @@
 		public function TestModeler(_player:Player)
 		{
 			this.player = _player;
+			this.maxHealth = player.health;
+			this.maxAmmo = player.getGun().ammo;
 			this.healthness = player.health;
 			this.ammo = player.getGun().ammo;
 			this.kills = player.kills;
@@ -44,13 +49,13 @@
 		{
 			//differences measure how much player has of "X" versus what is optimal amount of "X" for boredom
 			var ammoDifference:Number = 100 - this.ammo;
-			var healthDifference:Number = 100 - this.healthness;
+			var healthDifference:Number = maxHealth - this.healthness;
 			var killsDifference:Number = this.kills - 0;
 			var zombiesDifference:Number = this.visibleZombies - 0;
 			//difference between optimal boredom and player's values
 			this.boredom = 400 - ammoDifference - healthDifference - killsDifference - zombiesDifference;
 			//normlaizing boredom
-			this.boredom = (this.boredom / 400) * 100;
+			this.boredom = (this.boredom / 800) * 100;
 			return this.boredom;
 		}
 		
@@ -62,7 +67,7 @@
 			var zombiesDifference:Number = 100 - this.visibleZombies;
 			var timesHurtDifference:Number = this.timesHurt - 0;
 			//difference between optimal excitement and player's values
-			this.excitement = 300 - killsDifference - zombiesDifference - zombiesDifference;
+			this.excitement = 300 - killsDifference - zombiesDifference - timesHurtDifference;
 			//normalizing excitement
 			this.excitement = (this.excitement / 300) * 100;
 			return this.excitement;
@@ -73,8 +78,8 @@
 		{
 			//differences measure how much player has of "X" versus what is optimal amount of "X" for stress
 			var zombiesDifference:Number = 100 - this.visibleZombies;
-			var timesHurtDifference:Number = 100 - this.timesHurt;
-			var healthDifference:Number = this.healthness - 0;
+			var timesHurtDifference:Number = 100 / (3 - this.timesHurt);
+			var healthDifference:Number = (this.healthness - 0) / maxHealth * 100;
 			var ammoDifference:Number = this.ammo - 0;
 			//difference between optimal stress and player's values
 			this.stress = 400 - zombiesDifference - timesHurtDifference - healthDifference - ammoDifference;
@@ -111,6 +116,14 @@
 		public function getVisibleZombies():Number 
 		{
 			return this.visibleZombies;
+		}
+		
+		override public function update():void {
+			this.healthness = player.health;
+			this.ammo = player.getGun().ammo;
+			this.kills = player.kills;
+			this.timesHurt = (maxHealth - player.health) / player.getGun().damage;
+			this.visibleZombies = GameState.zombies.countLiving();
 		}
 	}
 

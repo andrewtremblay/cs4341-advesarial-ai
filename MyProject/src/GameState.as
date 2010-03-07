@@ -95,6 +95,10 @@
 			//Check collisions between bullets and zombies.
 			this.gotShot();
 			//Update PlayerModeler
+			for each(var t:TestModeler in playerModels.members) {
+				t.update();
+			}
+			
 			this.gotBit();
 			//Update AIDirector			
         }

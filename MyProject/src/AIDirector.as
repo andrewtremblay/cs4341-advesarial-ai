@@ -14,12 +14,18 @@
 			private var timer:Number = 1;
 			private var altTimer:Number = 1;
 			
+			private var zombieNum:Number = 200;
+			private var numZombies:int = 1;
+			
 			private var playersLeft:Number = 4; 
 			
 			//temporary variables 
 			private var curBored:Number = 0;
 			private var curExcite:Number = 0;
 			private var curStress:Number = 0;
+			private var prevBored:Number = 0;
+			private var prevExcite:Number = 0;
+			private var prevStress:Number = 0;
 
 			//enum hack for easier array referencing
 			private const boredom:Number = 0; 
@@ -75,7 +81,25 @@
 						curExcite = t.getExcitement();
 						curStress = t.getStress();
 					}
-			}		
+			}	
+			
+		public function getAverageVars():void {
+			playersLeft = GameState.players.countLiving();
+			curBored = 0;
+			curExcite = 0;
+			curStress = 0;
+			for each(var t:TestModeler in GameState.playerModels.members) {
+				// make sure player is alive
+				if (t.getHealth() > 0) {
+					curBored += t.getBoredom();
+					curExcite += t.getExcitement();
+					curStress += t.getStress();
+				}
+			}
+			curBored /= playersLeft;
+			curExcite /= playersLeft;
+			curStress /= playersLeft;
+		}
 			
 		public function constantRandomHeuristic():void{
 				timer -= FlxG.elapsed;
@@ -171,16 +195,131 @@
 			
 		}
 		
+		/*
+		 * Basic heuristic: spawns zombies with random targets based on the average boredom, 
+		 * excitement, and stress of all the players.
+		 */
+		public function basicHeuristic():void {
+			// if time for new wave
+			timer -= FlxG.elapsed;
+			if (timer <= 0) {
+				timer = 3;
+				
+				getAverageVars();
+				
+				// pick a random spout
+				var spoutNum:Number = Math.ceil(Math.random() * 4);
+				var spout:Point = GameState.SPOUT_1;
+				
+				if (spoutNum == 1) {
+					spout = GameState.SPOUT_1;
+				} else if (spoutNum == 2) {
+					spout = GameState.SPOUT_2;
+				} else if (spoutNum == 3) {
+					spout = GameState.SPOUT_3;
+				} else if (spoutNum == 4) {
+					spout = GameState.SPOUT_4;
+				}
+				
+				// decide how to alter the zombie constant and number of zombies
+				// Player is more bored than excited...make more zombies, tougher/faster
+				if (curBored > curExcite) {
+					zombieNum += (curBored - curExcite);
+					numZombies += 1;
+				}
+				// Player is stressed but not having fun...make fewer zombies, slower/weaker
+				else if (curStress > curExcite) {
+					zombieNum -= (curStress - curExcite);
+					numZombies -= 1;
+				}
+				// Otherwise, keep zombie constants the same
+				
+				// Generate zombies
+				for (var i:int = 0; i < numZombies; i++) {
+					var zombieHealth:Number = Math.floor(Math.random() * zombieNum);
+					var zombieSpeed:int = zombieNum - zombieHealth;
+					// store choice later?
+					GameState.makeZombie(spout, GameState.players.getRandom() as Player, zombieSpeed, zombieHealth);
+				}
+			}
+		}
+		
+		/*
+		 * Delta heuristic: spawns zombies with random targets based on the change in average boredom, 
+		 * excitement, and stress of all the players since the previous wave.
+		 */
+		public function deltaHeuristic():void {
+			// if time for new wave
+			timer -= FlxG.elapsed;
+			if (timer <= 0) {
+				timer = 3;
+				
+				// pick a random spout
+				var spoutNum:Number = Math.ceil(Math.random() * 4);
+				var spout:Point = GameState.SPOUT_1;
+				
+				if (spoutNum == 1) {
+					spout = GameState.SPOUT_1;
+				} else if (spoutNum == 2) {
+					spout = GameState.SPOUT_2;
+				} else if (spoutNum == 3) {
+					spout = GameState.SPOUT_3;
+				} else if (spoutNum == 4) {
+					spout = GameState.SPOUT_4;
+				}
+				
+				// update emotion values
+				prevBored = curBored;
+				prevExcite = curExcite;
+				prevStress = curStress;
+				getAverageVars();
+				
+				var deltaBored:Number = curBored - prevBored;
+				var deltaExcite:Number = curExcite - prevExcite;
+				var deltaStress:Number = curStress - prevStress;
+				
+				// decide how to alter the zombie constant and number of zombies
+				// Player has gotten more stressed
+				if (deltaStress > 0.5) {
+					zombieNum -= (deltaStress * 2);
+					numZombies -= 1;
+				}
+				// Player is not excited enough
+				else if (deltaExcite < 3) {
+					zombieNum += (deltaExcite * 2);
+					numZombies += 1;
+				}
+				// Otherwise, keep zombie constants the same
+				
+				// Generate zombies
+				for (var i:int = 0; i < numZombies; i++) {
+					var zombieHealth:Number = Math.floor(Math.random() * zombieNum);
+					var zombieSpeed:int = zombieNum - zombieHealth;
+					// store choice later?
+					GameState.makeZombie(spout, GameState.players.getRandom() as Player, zombieSpeed, zombieHealth);
+				}
+			}
+		}
+		
 		override public function update():void {
-			getNewVars();
+			//getNewVars();
 			//new heuristic goes here
-			constantRandomHeuristic();
+			//constantRandomHeuristic();
 			//placeHolderHeuristic();
 			
-				//If all players are dead, stop the game
-				if (GameState.players.countLiving() == 0) {
-					return;
-				}
+			//If all players are dead, stop the game
+			if (GameState.players.countLiving() == 0) {
+				return;
+			}
+			
+			//var text:String = "Players: " + GameState.players.countLiving() + " Boredom: " + curBored + " Excitement: " + curExcite + " Stress: " + curStress;
+			//FlashConnect.trace(text);
+			
+			// run the basic heuristic
+			//basicHeuristic();
+			
+			// run the delta heuristic
+			deltaHeuristic();
 			
 			super.update();
 			}
