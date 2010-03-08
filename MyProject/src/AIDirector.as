@@ -14,6 +14,8 @@
 			private var timer:Number = 1;
 			private var altTimer:Number = 1;
 			
+			private var waves:int = 0;
+			
 			private var zombieNum:Number = 200;
 			private var numZombies:int = 1;
 			
@@ -26,6 +28,9 @@
 			private var prevBored:Number = 0;
 			private var prevExcite:Number = 0;
 			private var prevStress:Number = 0;
+			
+			private var numChoiceA:int = 0;
+			private var numChoiceB:int = 0;
 
 			//enum hack for easier array referencing
 			private const boredom:Number = 0; 
@@ -301,6 +306,81 @@
 			}
 		}
 		
+		/*
+		 * Descending delta heuristic: like the delta heuristic, but is only allowed to make the same choice
+		 * a certain number of times in a row, and the effect of that choice decreases each time.
+		 */
+		public function decreasingDeltaHeuristic():void {
+			// if time for new wave
+			timer -= FlxG.elapsed;
+			if (timer <= 0) {
+				timer = 3;
+				
+				// pick a random spout
+				var spoutNum:Number = Math.ceil(Math.random() * 4);
+				var spout:Point = GameState.SPOUT_1;
+				
+				if (spoutNum == 1) {
+					spout = GameState.SPOUT_1;
+				} else if (spoutNum == 2) {
+					spout = GameState.SPOUT_2;
+				} else if (spoutNum == 3) {
+					spout = GameState.SPOUT_3;
+				} else if (spoutNum == 4) {
+					spout = GameState.SPOUT_4;
+				}
+				
+				// update emotion values
+				prevBored = curBored;
+				prevExcite = curExcite;
+				prevStress = curStress;
+				getAverageVars();
+				
+				var deltaBored:Number = curBored - prevBored;
+				var deltaExcite:Number = curExcite - prevExcite;
+				var deltaStress:Number = curStress - prevStress;
+				
+				var maxTimes:int = 5;
+				
+				// decide how to alter the zombie constant and number of zombies
+				// Player has gotten more stressed
+				if (deltaStress > 0.5) {
+					if (numChoiceA < maxTimes) {
+						zombieNum -= (deltaStress * 2) * ((maxTimes - numChoiceA) / maxTimes);
+						numZombies -= 1;
+						numChoiceA++;
+					}
+					else {
+						numChoiceA = 0;
+					}
+				}
+				// Player is not excited enough
+				else if (deltaExcite < 3) {
+					if (numChoiceB < maxTimes) {
+						zombieNum += (deltaExcite * 2) * ((maxTimes - numChoiceB) / maxTimes);
+						numZombies += 1;
+						numChoiceB++;
+					}
+					else {
+						numChoiceB = 0;
+					}
+				}
+				// Otherwise, keep zombie constants the same
+				
+				// Generate zombies
+				for (var i:int = 0; i < numZombies; i++) {
+					var zombieHealth:Number = Math.floor(Math.random() * zombieNum);
+					var zombieSpeed:int = zombieNum - zombieHealth;
+					// store choice later?
+					GameState.makeZombie(spout, GameState.players.getRandom() as Player, zombieSpeed, zombieHealth);
+				}
+			}
+		}
+		
+		public function getWaves():int {
+			return waves;
+		}
+		
 		override public function update():void {
 			//getNewVars();
 			//new heuristic goes here
@@ -312,6 +392,8 @@
 				return;
 			}
 			
+			waves++;
+			
 			//var text:String = "Players: " + GameState.players.countLiving() + " Boredom: " + curBored + " Excitement: " + curExcite + " Stress: " + curStress;
 			//FlashConnect.trace(text);
 			
@@ -319,7 +401,10 @@
 			//basicHeuristic();
 			
 			// run the delta heuristic
-			deltaHeuristic();
+			//deltaHeuristic();
+			
+			// run the decreasing delta heuristic
+			decreasingDeltaHeuristic();
 			
 			super.update();
 			}

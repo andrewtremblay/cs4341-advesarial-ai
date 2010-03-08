@@ -7,6 +7,7 @@
 	import flash.geom.Point;
 	import org.flixel.*;
 	import org.flashdevelop.utils.FlashConnect;
+	import flash.system.fscommand;
 	
 	public class GameState extends FlxState
 	{
@@ -89,6 +90,8 @@
         {
 			//If all players are dead, stop the game
 			if (GameState.players.countLiving() == 0) {
+				FlashConnect.trace("Total waves: " + AIDr.getWaves());
+				fscommand("quit");
 				return;
 			}
             super.update();
