@@ -353,6 +353,7 @@
 					else {
 						numChoiceA = 0;
 					}
+					numChoiceB = 0;
 				}
 				// Player is not excited enough
 				else if (deltaExcite < 3) {
@@ -364,6 +365,7 @@
 					else {
 						numChoiceB = 0;
 					}
+					numChoiceA = 0;
 				}
 				// Otherwise, keep zombie constants the same
 				
